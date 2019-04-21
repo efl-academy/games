@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css?family=BioRhyme|Cabin');
+
+      :root {
+        --header-font: 'BioRhyme', serif;
+        --text-font: 'Cabin', sans-serif;
+        --carmine-pink: #E94F37;
+        --black-olive: #393E41;
+        --tufts-blue: #3F88C5;
+        --verdigris: #44BBA4;
+        --verdigris-dark: rgb(48, 126, 110);
+        --card-size: 120px;
+        --header-text-size: 1.5em;
+        --text-size: 1.3em;
+        --container-height: 800px;
+        --card-space-between: 16px;
+      }
+
+      .fc-header {
+        height: 70px;
+        font-family: var(--header-font);
+        font-size: var(--header-text-size) !important;
+        color: var(--tufts-blue) !important;
+        box-shadow: 0 4px 20px 0 #dadada;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 25px;
+        background-color: #fdfdfd;
+      }
+
+      html, body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      #root {
+        font-family: var(--text-font);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #2c3e50;
+        display: flex;
+        height: var(--container-height);
+        flex-direction: column;
+        user-select: none;
+      }
+
+      #timer {
+        width: 80px;
+      }
+
+      #title {
+        color: var(--tufts-blue);
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .fc-board .hidden {
+        display: none !important;
+      }
+
+      .fc-board {
+        background-color: #f9f9f9a6;
+        flex: 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .new-game-btn {
+        font-family: var(--text-font);
+        font-size: 1.2em;
+        border-radius: 5px;
+        border-style: none;
+        outline: none;
+        color: white;
+        background-color: var(--verdigris);
+        padding: 6px 20px;
+      }
+
+      .new-game-btn:hover,
+      .new-game-btn:visited,
+      .new-game-btn:focus,
+      .new-game-btn:active  {
+        color: white !important;
+      }
+
+      .new-game-btn:active {
+        background-color: var(--verdigris-dark);
+      }
+      
+      .cards-container {
+        display: grid;
+        grid-template-columns: repeat(4, calc(var(--card-size) + var(--card-space-between)));
+        grid-template-rows: repeat(4, calc(var(--card-size) + var(--card-space-between)));
+        justify-items: center;
+        transform: translateY(-40px);
+      }
+
+      .win-window {
+        color: var(--black-olive);
+        width: 320px;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 14px 0;
+        padding: 10px 0 16px 0;
+      }
+
+      .win-window .congrats {
+        font-family: var(--header-font);
+        font-size: var(--header-text-size);
+        margin: 0.1em 0.3em 0.9em 0.3em;
+      }
+
+      .answered {
+        opacity: 0;
+      }
+
+      .fc-card {
+        transition: 0.5s;
+        width: var(--card-size);
+        height: var(--card-size);
+        min-width: var(--card-size);
+        min-height: var(--card-size);
+        margin: 6px;
+        perspective: 1000px;
+      }
+
+      .card-flipper {
+        transition: all 0.5s ease;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        position: relative;
+      }
+
+      .card-flipper.flipped {
+        transform: rotateY(180deg);
+      }
+
+      .card-front, .card-back {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        border-radius: 12px;
+        box-shadow: 0 0 8px 0 rgb(158, 158, 158);
+      }
+
+      .card-front {
+        z-index: 2;
+        background: #fff url(https://efl.academy/wp-content/uploads/2018/12/efl_academy_transparent-140x140.png);
+        background-size: var(--card-size) var(--card-size);
+      }
+
+      .card-back {
+        background-color: var(--carmine-pink);
+        transform: rotateY(180deg);
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        flex-direction: column;
+      }
+
+      .card-back .verb {
+        color: white;
+        font-size: var(--text-size);
+        margin: 0;
+        word-wrap: break-word;
+      }
+
+      @media only screen and (max-width: 560px) {
+        :root {
+          --card-size: 100px;
+          --header-text-size: 1.3em;
+          --text-size: 1em;
+          --container-height: 700px;
+        }
+
+        .fc-header {
+          height: 65px;
+        }
+      }
+
+      @media only screen and (max-width: 470px) {
+        :root {
+          --card-size: 80px;
+          --header-text-size: 1.2em;
+          --text-size: 0.8em;
+          --container-height: 600px;
+        }
+
+        .fc-header {
+          height: 50px;
+          padding: 0 10px;
+        }
+      }
+
+      @media only screen and (max-width: 400px) {
+        :root {
+          --card-size: 70px;
+          --header-text-size: 1.1em;
+          --text-size: 0.7em;
+          --container-height: 550px;
+          --card-space-between: 9px;
+        }
+      }
+
+      @media only screen and (max-width: 350px) {
+        :root {
+          --card-size: 60px;
+          --header-text-size: 1em;
+          --text-size: 0.6em;
+          --container-height: 550px;
+          --card-space-between: 9px;
+        }
+      }
+
+      @media only screen and (max-width: 300px) {
+        :root {
+          --card-size: 50px;
+          --header-text-size: 0.8em;
+          --text-size: 0.55em;
+          --container-height: 550px;
+          --card-space-between: 5px;
+        }
+      }
