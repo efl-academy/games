@@ -3,282 +3,281 @@
 
 // Developer: @intersteller(telegram)
 function shuffle(array) {
-    const arrayCopy = array.slice();
-    let counter = arrayCopy.length;
-  
-    while (counter > 0) {
-      const index = Math.floor(Math.random() * counter);
-  
-      counter--;
-  
-      const temp = arrayCopy[counter];
-      arrayCopy[counter] = arrayCopy[index];
-      arrayCopy[index] = temp;
+  const arrayCopy = array.slice();
+  let counter = arrayCopy.length;
+
+  while (counter > 0) {
+    const index = Math.floor(Math.random() * counter);
+
+    counter--;
+
+    const temp = arrayCopy[counter];
+    arrayCopy[counter] = arrayCopy[index];
+    arrayCopy[index] = temp;
+  }
+
+  return arrayCopy;
+};
+
+Vue.component('mc-answer', {
+  props: {
+    'verb': String,
+    'id': Number,
+    'status': String,
+    'disabled': Boolean,
+  },
+  methods: {
+    handleClick() {
+      this.$emit('check-answer', this.id);
     }
-  
-    return arrayCopy;
-  };
-  
-  Vue.component('mc-answer', {
-    props: {
-      'verb': String,
-      'id': Number,
-      'status': String,
-      'disabled': Boolean,
+  },
+  template: `
+    <button
+      class="mc-answer mc-button"
+      :class="{success: status === 'success', error: status === 'error'}"
+      :disabled="disabled"
+      @click="handleClick"
+    >
+      {{verb}}
+    </button>
+  `,
+});
+
+Vue.component('mc-verb-form', {
+  props: ['verb', 'postfix', 'status'],
+  template: `
+    <button
+      class="mc-verb-form mc-button"
+      :class="{success: status === 'success', error: status === 'error'}"
+      @click="$emit('check-verb-form', verb)"
+    >
+      {{verb + ' ' + postfix}}
+    </button>
+  `,
+});
+
+const initialState = () => ({
+  wordIndex: 0,
+  correctAnswerCount: 0,
+  oWords,
+  verbForms,
+  wordsSet: null,
+  verbFormSet: null,
+  selectedAnswer: null,
+  correctForm: null,
+  answered: false,
+  isNextQuestion: false,
+  isGameFinished: false,
+  showVerbForms: false,
+});
+
+new Vue({
+  el: '#root',
+
+  data() {
+    return {
+      ...initialState(),
+    }
+  },
+
+  created() {
+    this.oWords = this.oWords.map((w) => ({
+      ...w,
+      used: false,
+    }));
+  },
+
+  mounted() {
+    this.initGame();
+  },
+
+  computed: {
+    currentWord() {
+      return this.oWords[this.wordIndex];
     },
-    methods: {
-      handleClick() {
-        this.$emit('check-answer', this.id);
+
+    highlightedSentence() {
+      let sentence = this.currentWord.answer;
+
+      this.getCorrectForm().split(' ').forEach(w => {
+        if (sentence.split(' ')[0].toLowerCase() === w) {
+          w = w.charAt(0).toUpperCase() + w.slice(1);
+        }
+        sentence = sentence.replace(new RegExp(`\\b${w}\\b`, 'g'), `<span class='success'>${w}</span>`);
+      });
+
+      return sentence;
+    },
+
+    sentence() {
+      return (this.answered || this.isNextQuestion)
+        ? this.highlightedSentence
+        : this.currentWord.sentence;
+    },
+
+    postfix() {
+      return this.currentWord.verb.split(' ').slice(1).join(' ');
+    },
+  },
+
+  methods: {
+    nextQuestion() {
+      if (this.oWords.filter(w => w.used).length === this.oWords.length) {
+        this.isGameFinished = true;
+        return;
+      }
+
+      this.generateNewWordIndex();
+      this.createUniqueAnswersSet();
+      this.createVerbFormSet();
+      this.isNextQuestion = false;
+      this.showVerbForms = false;
+      this.answered = false;
+      this.correctForm = null;
+      this.selectedAnswer = null;
+
+      if (!this.verbFormSet.length) {
+        this.nextQuestion();
       }
     },
-    template: `
-      <button 
-        class="mc-answer mc-button"
-        :class="{success: status === 'success', error: status === 'error'}"
-        :disabled="disabled"
-        @click="handleClick"
-      >
-        {{verb}}
-      </button>
-    `,
-  });
-  
-  Vue.component('mc-verb-form', {
-    props: ['verb', 'postfix', 'status'],
-    template: `
-      <button
-        class="mc-verb-form mc-button"
-        :class="{success: status === 'success', error: status === 'error'}"
-        @click="$emit('check-verb-form', verb)"
-      >
-        {{verb + ' ' + postfix}}
-      </button>
-    `,
-  });
-  
-  const initialState = () => ({
-    wordIndex: 0,
-    correctAnswerCount: 0,
-    oWords,
-    usedIndices: [],
-    verbForms,
-    wordsSet: null,
-    verbFormSet: null,
-    selectedAnswer: null,
-    correctForm: null,
-    answered: false,
-    isNextQuestion: false,
-    isGameFinished: false,
-    showVerbForms: false,
-  });
-  
-  new Vue({
-    el: '#root',
-  
-    data() {
-      return {
-        ...initialState(),
+
+    initGame() {
+      this.generateNewWordIndex();
+      this.createUniqueAnswersSet();
+      this.createVerbFormSet();
+
+      if (!this.verbFormSet) {
+        this.initGame();
       }
     },
-  
-    mounted() {
+
+    resetGame() {
+      Object.assign(this.$data, initialState());
       this.initGame();
     },
-    
-    computed: {
-      currentWord() {
-        return this.oWords[this.wordIndex];
-      },
-  
-      highlightedSentence() {
-        let sentence = this.oWords[this.wordIndex].answer;
-  
-        this.getCorrectForm().split(' ').forEach(w => {
-          if (sentence.split(' ')[0].toLowerCase() === w) {
-            w = w.charAt(0).toUpperCase() + w.slice(1);
-          }
-          console.log(w);
-          sentence = sentence.replace(new RegExp(w, 'i'), `<span class='success'>${w}</span>`);
-        });
-  
-        console.log(sentence);
-  
-        return sentence;
-      },
-  
-      sentence() {
-        return (this.answered || this.isNextQuestion)
-          ? this.highlightedSentence
-          : this.currentWord.sentence;
-      },
-  
-      postfix() {
-        return this.currentWord.verb.split(' ').slice(1).join(' ');
-      },
+
+    generateNewWordIndex() {
+      if (this.oWords.length < 1) {
+        console.error('generateNewWordIndex: no data');
+        return 0;
+      }
+
+      while(true) {
+        const index = Math.floor(Math.random() * this.oWords.length);
+        const oWord = this.oWords[index];
+
+        if (!oWord.used) {
+          oWord.used = true;
+          this.wordIndex = index;
+          break;
+        }
+      }
     },
-  
-    methods: {
-      nextQuestion() {
-        this.wordIndex = this.generateNewWordIndex();
-        this.wordsSet = this.getUniqueSet();
-        this.verbFormSet = this.createVerbFormSet();
-        this.isNextQuestion = false;
-        this.showVerbForms = false;
-        this.answered = false;
-        this.correctForm = null;
-        this.selectedAnswer = null;
-  
-        if (!this.verbFormSet) {
-          this.nextQuestion();
-        }
-      },
-  
-      initGame() {
-        this.wordIndex = this.generateNewWordIndex();
-        this.wordsSet = this.getUniqueSet();
-        this.verbFormSet = this.createVerbFormSet();
-  
-        if (!this.verbFormSet) {
-          this.initGame();
-        }
-      },
-  
-      resetGame() {
-        Object.assign(this.$data, initialState());
-        this.initGame();
-      },
-  
-      generateNewWordIndex() {
-        if (this.oWords.length < 1) {
-          console.error('generateNewWordIndex: no data');
-          return 0;
-        }
-  
-        let index;
-  
-        while(true) {
-          index = Math.floor(Math.random() * this.oWords.length);
-  
-          if (!this.usedIndices.includes(index)) {
-            this.wordIndex = index;
-            this.usedIndices.push(index);
-            break;
-          }
-        }
-  
-        return index;
-      },
-  
-      getCorrectForm() {
-        let correctForm = '';
-  
-        this.verbFormSet.forEach((form) => {
-          const fullVerb = `${form.verb} ${this.postfix}`;
-  
-          let regexpString = '^';
-          fullVerb.split(' ').forEach(w => {
-            regexpString += '(?=.*\\b' + w.toLowerCase() + '\\b)';
-          });
-          regexpString += '.*$';
-          const regexp = new RegExp(regexpString, 'i');
-  
-          const word = this.wordsSet.find(w => 
-            regexp.test(w.answer.toLowerCase())
-          );
-  
-          console.log(regexpString);
-  
-          if (word) {
-            correctForm = fullVerb;
-          }
-        });
-  
-        return correctForm;
-      },
-   
-      checkVerbForm(verb) {
-        const selectedForm = this.verbFormSet.find(f => f.verb === verb);
-        const fullVerb = `${verb} ${this.postfix}`;
+
+    getCorrectForm() {
+      let correctForm = '';
+
+      this.verbFormSet.forEach((form) => {
+        const fullVerb = `${form.verb} ${this.postfix}`;
+
         let regexpString = '^';
-  
         fullVerb.split(' ').forEach(w => {
-          regexpString += `(?=.*\\b${w.toLowerCase()}\\b)`;
+          regexpString += '(?=.*\\b' + w.toLowerCase() + '\\b)';
         });
-  
         regexpString += '.*$';
-        const regexp = new RegExp(regexpString);
-  
-        const word = this.wordsSet.find(w => 
+        const regexp = new RegExp(regexpString, 'i');
+
+        const word = this.wordsSet.find(w =>
           regexp.test(w.answer.toLowerCase())
-        )
-  
+        );
+
         if (word) {
-          this.correctAnswerCount++;
-          this.correctForm = fullVerb;
-          selectedForm.status = 'success';
-        } else {
-          selectedForm.status = 'error';
+          correctForm = fullVerb;
         }
-  
-        this.answered = true;
-        this.isNextQuestion = true;
-      },
-  
-      createVerbFormSet() {
-        const verb = this.currentWord.verb.split(' ')[0];
-        const forms = verbForms[verb];
-  
-        return forms 
-          ? [...new Set(Object.values(forms))].map(f => ({verb: f, status: ''})) 
-          : null;
-      },
-  
-      checkAnswer(id) {
-        const selectedWord = this.wordsSet.find(w => w.id === id);
-  
-        if (this.currentWord.id === id) {
-          selectedWord.status = 'success';
-          if (this.verbFormSet) {
-            this.showVerbForms = true;
-          } else {
-            this.correctAnswerCount++;
-            this.isNextQuestion = true;
-          }
+      });
+
+      return correctForm;
+    },
+
+    checkVerbForm(verb) {
+      const selectedForm = this.verbFormSet.find(f => f.verb === verb);
+      const fullVerb = `${verb} ${this.postfix}`;
+      let regexpString = '^';
+
+      fullVerb.split(' ').forEach(w => {
+        regexpString += `(?=.*\\b${w.toLowerCase()}\\b)`;
+      });
+
+      regexpString += '.*$';
+      const regexp = new RegExp(regexpString);
+
+      const word = this.wordsSet.find(w =>
+        regexp.test(w.answer.toLowerCase())
+      )
+
+      if (word) {
+        this.correctAnswerCount++;
+        this.correctForm = fullVerb;
+        selectedForm.status = 'success';
+      } else {
+        selectedForm.status = 'error';
+      }
+
+      this.answered = true;
+      this.isNextQuestion = true;
+    },
+
+    createVerbFormSet() {
+      const verb = this.currentWord.verb.split(' ')[0];
+      const forms = verbForms[verb];
+
+      this.verbFormSet = forms
+        ? [...new Set(Object.values(forms))].map(f => ({verb: f, status: ''}))
+        : null;
+    },
+
+    checkAnswer(id) {
+      const selectedWord = this.wordsSet.find(w => w.id === id);
+
+      if (this.currentWord.id === id) {
+        selectedWord.status = 'success';
+        if (this.verbFormSet) {
+          this.showVerbForms = true;
         } else {
-          selectedWord.status = 'error';
+          this.correctAnswerCount++;
           this.isNextQuestion = true;
         }
-        this.selectedAnswer = selectedWord;
-      },
-  
-      getUniqueSet() {
-        let uniqueSet = [];
-  
-        if (this.usedIndices.length === this.oWords.length) {
-          this.isGameFinished = true;
-          return [];
-        }
-  
-        uniqueSet.push(this.currentWord);
-        
-        while (uniqueSet.length < 4) {
-          const index = Math.floor(Math.random() * this.oWords.length);
-    
-          const word = this.oWords[index];
-          const isAlreadyAdded = uniqueSet.find(w => w.verb === word.verb);
-    
-          if (!isAlreadyAdded) {
-            uniqueSet.push(word);
-          }
-        }
-  
-        uniqueSet = shuffle(uniqueSet);
-  
-        return uniqueSet
-          .map(w => {
-            w.status = '';
-            return w;
-          });
+      } else {
+        selectedWord.status = 'error';
+        this.isNextQuestion = true;
       }
+      this.selectedAnswer = selectedWord;
+    },
+
+    createUniqueAnswersSet() {
+      let uniqueSet = [];
+
+      const usedWords = this.oWords.filter(w => w.used);
+
+      uniqueSet.push(this.currentWord || this.oWords[this.wordIndex]);
+
+      while (uniqueSet.length < 4) {
+        const index = Math.floor(Math.random() * this.oWords.length);
+        const word = this.oWords[index];
+        const isAlreadyAdded = uniqueSet.find(w => w.verb === word.verb);
+
+        if (!isAlreadyAdded) {
+          uniqueSet.push(word);
+        }
+      }
+
+      uniqueSet = shuffle(uniqueSet);
+
+      this.wordsSet = uniqueSet
+        .map(w => {
+          w.status = '';
+          return w;
+        });
     }
-  });
+  }
+});
