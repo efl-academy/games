@@ -306,8 +306,8 @@
         }
 
         .card-definition {
-          margin: 0 20px;
-          line-height: 1.4rem;
+          margin: 0 20px !important;
+          line-height: 1.4rem !important;
           text-align: justify;
         }
       }
@@ -343,7 +343,7 @@
         padding: 20px 0;
         box-sizing: content-box;
         width: 96vw;
-        max-width: 280px;
+        max-width: 310px;
         margin: 30px 10px;
         background-color: white;
         box-shadow: 0 2px 12px 5px #e8e8e8;
@@ -359,7 +359,7 @@
             border-bottom: 1px solid rgb(196, 196, 196);
 
             p {
-              margin-bottom: 0;
+              margin-bottom: 0 !important;
             }
           }
         }
@@ -370,8 +370,8 @@
 
           p {
             display: inline-block;
-            margin: 6px;
-            margin-left: 10px;
+            margin: 6px !important;
+            margin-left: 10px !important;
             font-size: 1.1rem;
           }
         }
