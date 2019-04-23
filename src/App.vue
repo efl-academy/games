@@ -252,7 +252,7 @@
     .welcome-window {
       transform: translateY(50%);
       max-width: 400px;
-      width: 90vw;
+      width: 90%;
       margin: 0 auto;
     }
 
@@ -342,9 +342,9 @@
       .results-container {
         padding: 20px 0;
         box-sizing: content-box;
-        width: 96vw;
+        width: 92vw;
         max-width: 310px;
-        margin: 30px 10px;
+        margin: 10px 10px 30px;
         background-color: white;
         box-shadow: 0 2px 12px 5px #e8e8e8;
 
