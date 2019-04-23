@@ -275,7 +275,7 @@
           align-items: center;
           height: 100%;
           max-width: 460px;
-          width: 95vw;
+          width: 95%;
           margin: 0 auto;
         }
       }
@@ -290,6 +290,8 @@
         position: relative;
         margin-top: 30px;
         user-select: none;
+        display: flex;
+        flex-direction: column;
 
         .card-word {
           height: 1.6rem;
@@ -321,8 +323,9 @@
           background: none;
           outline: none;
           text-align: center;
-          font-size: 2.5rem;
+          font-size: 2.5rem !important;
           font-weight: bold;
+          padding: 0;
         }
       }
     }

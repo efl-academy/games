@@ -28,9 +28,10 @@
 <style lang="less" scoped>
   .progress-bar-container {
     height: 6px;
-    width: 90vw;
+    width: 84vw;
     max-width: 400px;
     margin: 10px auto;
+    margin-bottom: 100px;
     color: white;
 
     background-color: rgb(42, 43, 44);
