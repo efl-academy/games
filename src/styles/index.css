@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css?family=Cabin');
+
+.heading {
+  font-size: 1.8rem;
+}
+
+.error {
+  color: rgb(202, 203, 210);
+}
+
+.success {
+  color: rgb(106, 173, 106);
+}
+
+p {
+  margin: 1rem 0;
+}
