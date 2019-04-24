@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <div class="welcome-window" v-if="showWelcome">
-      <p class="heading">Guess a word</p>
-      <p>You have to guess the word in a question by definition gived. Solve as many words as you can before time runs out!</p>
+      <p class="heading">TypeRighter</p>
+      <p>Type the word(s) described in the box. Do as many as you can before the clock hits zero!</p>
       <button
         class="button"
         @click="start"
@@ -254,6 +254,10 @@
       max-width: 400px;
       width: 90%;
       margin: 0 auto;
+
+      button {
+        margin-top: 30px;
+      }
     }
 
     .game-window {
