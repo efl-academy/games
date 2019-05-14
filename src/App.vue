@@ -26,7 +26,7 @@
 
     <div class="welcome-container" v-if="showWelcome">
       <p class="instructions">Swipe a card to the right if a sentence is correct, and to the left if it is not.</p>
-      <p>You win if get {{cardsToWin}} correct answers in a row.</p>
+      <p>You win if you get {{cardsToWin}} correct answers in a row.</p>
       <button class="new-game-button" @click="startGame">New Game</button>
     </div>
 
@@ -321,9 +321,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   min-height: 650px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   overflow: hidden;
   font-size: 1.2em;
   background-color: #f9f9f9;
@@ -350,10 +347,8 @@ export default {
   }
 
   .game-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     position: relative;
+    margin-top: 100px;
 
     .cards {
       color: white;
@@ -408,6 +403,7 @@ export default {
     padding: 0 10px;
     user-select: none;
     line-height: normal;
+    transform: translateY(50%);
 
     & > p {
       margin-bottom: 10px;
