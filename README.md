@@ -1,4 +1,4 @@
-# games
+# efl-academy-github
 
 ## Project setup
 ```
