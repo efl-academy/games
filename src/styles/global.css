@@ -1,0 +1,31 @@
+button {
+  padding: 8px 16px;
+  border-radius: 10px;
+  outline: none;
+  border-style: none;
+  transition: 0.3s;
+  box-shadow: 0 0 3px 0 rgb(126, 126, 126);
+}
+
+button:hover {
+  box-shadow: 0 0 5px 0 rgb(126, 126, 126);
+}
+
+button:active {
+  box-shadow: 0 0 7px 0 rgb(126, 126, 126);
+}
+
+button.primary {
+  background-color: rgb(92, 179, 250);
+  color: white;
+  font-weight: 600;
+  padding: 8px 16px;
+}
+
+.primary:active {
+  background-color: rgb(71, 160, 233);
+}
+
+button.normal {
+  background-color: white;
+}
