@@ -5,21 +5,20 @@
     :disabled="disabled"
     @click="onClick"
   >
-
+    {{answer}}
   </button>
 </template>
 
 <script>
   export default {
     props: {
-      verb: String,
-      id: Number,
+      answer: String,
       status: String,
       disabled: Boolean,
     },
     methods: {
       onClick() {
-        this.$emit('check-answer', this.id);
+        this.$emit('check-answer', this.answer);
       }
     },
   }

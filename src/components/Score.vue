@@ -11,8 +11,8 @@
           class="cell"
           :class="[
             item === null ? 'empty' : '',
-            item === 0 ? 'failure' : '',
-            item === 1 ? 'success' : '',
+            item === false ? 'failure' : '',
+            item === true ? 'success' : '',
           ]"
           :key="index"
         >
@@ -30,8 +30,8 @@
           class="cell"
           :class="[
             item === null ? 'empty' : '',
-            item === 0 ? 'failure' : '',
-            item === 1 ? 'success' : '',
+            item === false ? 'failure' : '',
+            item === true ? 'success' : '',
           ]"
           :key="index"
         ></div>

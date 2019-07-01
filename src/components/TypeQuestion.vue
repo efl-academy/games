@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: 'type-page',
+    name: 'type-question',
   }
 </script>
 
