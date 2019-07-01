@@ -42,11 +42,22 @@
       },
       score: {
         on: { START: 'question'}
-      }, 
+      },
       results: {
         on: { START: 'question'}
       },
     },
+  });
+
+  const initialState = () => ({
+    wordIndex: 0,
+    correctAnswerCount: 0,
+    oWords,
+    wordsSet: null,
+    correctForm: null,
+    answered: false,
+    isNextQuestion: false,
+    isGameFinished: false,
   });
 
   export default {
