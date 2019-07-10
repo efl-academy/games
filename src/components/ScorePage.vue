@@ -24,7 +24,7 @@
     mounted() {
       setTimeout(() => {
         this.$emit('next', 'score');
-      }, pictureLifetime);
+      }, pictureFrameLifetime);
     },
   }
 </script>
