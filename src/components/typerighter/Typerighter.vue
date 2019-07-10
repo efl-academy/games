@@ -1,5 +1,10 @@
 <template>
   <div class="typerighter">
+    <timer
+      :timeLimit="timeLimit"
+      @time-is-up="answer"
+    />
+
     <div class="card">
       <div class="card-word">
         <p class="word">{{input.toLowerCase()}}</p>
@@ -26,15 +31,17 @@
 
 <script>
   import Progressbar from '@/components/typerighter/Progressbar';
-  // import Timer from '@/components/Timer';
+  import Timer from '@/components/Timer.vue';
   import shuffle from '@/helpers/shuffle';
 
   export default {
     name: 'app',
+
     components: {
       Progressbar,
-      // Timer,
+      Timer,
     },
+
     data: () => ({
       dataset: typerighterData,
       timeLimit: typerighterTimeLimit,
@@ -51,9 +58,11 @@
       input: '',
       lastCorrectInput: '',
     }),
+
     mounted() {
       this.init();
     },
+
     filters: {
       prettifyTime(value) {
         const minutes = Math.floor(value / 60);
@@ -61,11 +70,13 @@
         return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds.toFixed(0)}s`;
       },
     },
+
     computed: {
       currentWord() {
         return this.dataset[this.currentIndex];
       }
     },
+
     methods: {
       init() {
         this.currentIndex = 0;
@@ -75,6 +86,7 @@
         }));
         this.answeredWords = [];
       },
+
       handleChange(e) {
         const value = e.target.value;
         const regexp = new RegExp(`^${value}`, 'i');
@@ -82,19 +94,12 @@
         this.progress.value = this.calculateProgress(result, value);
         this.inputPrev = value;
         const isGuessed = this.checkResult();
+
         if (isGuessed) {
-          // this.answeredWords.push({...this.currentWord, correct: true});
-          setTimeout(() => {
-            this.goNextWord();
-          }, 300);
-        } else if (isGuessed) {
-          // this.answeredWords.push({...this.currentWord, correct: true});
-          this.$emit('answered');
-          setTimeout(() => {
-            this.showResults = true;
-          }, 300);
+          this.answer(true);
         }
       },
+
       calculateProgress(result) {
         if (result) {
           this.lastCorrectInput = result[0];
@@ -108,6 +113,7 @@
           return 0;
         }
       },
+
       handleSessionTime(sessionTime) {
         const diff = this.timeLimit - sessionTime;
         this.elapsedTime = diff;
@@ -117,6 +123,7 @@
           this.avgTimePerWord = diff;
         }
       },
+
       goNextWord() {
         this.resetQuestion();
         this.currentIndex++;
@@ -126,6 +133,7 @@
           }
         });
       },
+
       skipQuestion() {
         this.answeredWords.push({...this.currentWord, correct: false});
         this.goNextWord();
@@ -134,18 +142,21 @@
           this.showResults = true;
         }
       },
+
       resetQuestion() {
         this.progress.value = 0;
         this.progress.correct = true;
         this.input = '';
         this.lastCorrectInput = '';
       },
+
       checkResult() {
         if (this.currentWord.word === this.input.toLowerCase()) {
           return true;
         }
         return false;
       },
+
       start() {
         this.showWelcome = false;
         this.showResults = false;
@@ -154,7 +165,11 @@
         this.$nextTick(() => {
           this.$refs.input.focus()
         });
-      }
+      },
+
+      answer(isCorrect) {
+        this.$emit('answered', isCorrect);
+      },
     },
   }
 </script>

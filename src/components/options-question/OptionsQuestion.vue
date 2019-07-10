@@ -15,10 +15,12 @@
 
 <script>
   import Answer from './Answer.vue';
+  import Timer from '@/components/Timer.vue';
   import shuffle from '@/helpers/shuffle';
 
   const initialState = () => ({
     quizData,
+    timeLimit: quizTimeLimit,
     currentIndex: 0,
     answers: [],
   });

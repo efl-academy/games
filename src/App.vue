@@ -3,21 +3,22 @@
     <score
       :player="score['PLAYER']"
       :bot="score['BOT']"
-    ></score>
-    <welcome-page v-show="currentStateValue === 'welcome'" @start-game="startGame"></welcome-page>
-    <div v-show="currentStateValue === 'question'">
+    />
+    <welcome-page v-if="currentStateValue === 'welcome'" @start-game="startGame" />
+    <picture-page v-if="currentStateValue === 'getready'" state="getready" @next="onNextPage" />
+    <div v-if="currentStateValue === 'question'">
       <typerighter
-        v-show="questionType === 'typing'"
-        @answered="onAnswered"
+        v-if="questionType === 'typing'"
+        @answered="onTyperighterAnswer"
       />
       <options-question
-        v-show="questionType === 'options'"
+        v-if="questionType === 'options'"
         :holder="currentHolder"
         @shot="onShot"
       />
     </div>
-    <score-page v-show="currentStateValue === 'score'"></score-page>
-    <results-page v-show="currentStateValue === 'results'" @new-game="resetGame"></results-page>
+    <score-page v-if="currentStateValue === 'score'" :score="score" @next="onNextPage" />
+    <results-page v-show="currentStateValue === 'results'" @new-game="resetGame" />
   </div>
 </template>
 
@@ -46,13 +47,13 @@
     initial: 'welcome',
     states: {
       welcome: {
-        on: { GETREADY: 'question'}
+        on: { GETREADY: 'getready' }
       },
       getready: {
-        on: { QUESTION: 'question'}
+        on: { QUESTION: 'question' }
       },
       question: {
-        on: { SHOT: 'shot', RESULTS: 'results' }
+        on: { SCORE: 'score', RESULTS: 'results', GETREADY: 'getready' }
       },
       shot: {
         on: {
@@ -113,6 +114,30 @@
     },
 
     methods: {
+      onNextPage(currentPage) {
+        switch(currentPage) {
+          case 'score':
+            console.log(this.currentHolder);
+            // this.fsmService.send('QUESTION');
+            break;
+          case 'getready':
+            this.fsmService.send('QUESTION');
+            break;
+          default:
+            break;
+        }
+      },
+
+      changePicture(pictureState) {
+        switch(pictureState) {
+          case 'getready':
+            this.fsmService.send('QUESTION');
+            break;
+          default:
+            break;
+        }
+      },
+
       startGame() {
         this.fsmService.send('GETREADY');
       },
@@ -141,8 +166,17 @@
         this.switchHolder();
       },
 
-      onAnswered() {
+      onTyperighterAnswer(isCorrect) {
+        this.shotsCount++;
+        this.$set(this.score[this.currentHolder], this.scoreIndex, isCorrect);
+        
+        if (this.shotsCount % 2 === 0) {
+          this.nextIteration();
+        }
 
+        this.switchHolder();
+
+        this.fsmService.send('SCORE');
       },
 
       switchHolder() {
