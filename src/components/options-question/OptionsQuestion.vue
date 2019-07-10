@@ -15,23 +15,7 @@
 
 <script>
   import Answer from './Answer.vue';
-
-  function shuffle(array) {
-    const arrayCopy = array.slice();
-    let counter = arrayCopy.length;
-
-    while (counter > 0) {
-      const index = Math.floor(Math.random() * counter);
-
-      counter--;
-
-      const temp = arrayCopy[counter];
-      arrayCopy[counter] = arrayCopy[index];
-      arrayCopy[index] = temp;
-    }
-
-    return arrayCopy;
-  };
+  import shuffle from '@/helpers/shuffle';
 
   const initialState = () => ({
     quizData,
@@ -71,7 +55,7 @@
 
       generateAnswers() {
         const answers = this.quizData.map(q => q.answer);
-        const shuffledAnswers = this.shuffle(answers);
+        const shuffledAnswers = shuffle(answers);
 
         return shuffledAnswers.slice(0, 4);
       },
@@ -81,30 +65,21 @@
       },
 
       checkAnswer(data) {
-        const isCorrect = this.currentQuiz.answer === data;
+        this.currentIndex++;
+        const isNoQuiz = !this.currentQuiz;
 
+        if (isNoQuiz) {
+          this.quizData = shuffle(this.quizData);
+          this.currentIndex = 0;
+        }
+
+        this.answers = this.generateAnswers();
+
+        const isCorrect = this.currentQuiz.answer === data;
         const payload = {
           isCorrect,
         }
-        
         this.$emit('shot', payload);
-      },
-
-      shuffle(array) {
-        const arrayCopy = array.slice();
-        let counter = arrayCopy.length;
-
-        while (counter > 0) {
-          const index = Math.floor(Math.random() * counter);
-
-          counter--;
-
-          const temp = arrayCopy[counter];
-          arrayCopy[counter] = arrayCopy[index];
-          arrayCopy[index] = temp;
-        }
-
-        return arrayCopy;
       },
     },
   }

@@ -1,6 +1,10 @@
 <template>
-  <div>
-    results
+  <div class="results-page">
+    <div class="header"></div>
+    <div class="content"></div>
+    <div class="footer">
+      <button class="primary" @click="$emit('new-game')">New Game</button>
+    </div>
   </div>
 </template>
 

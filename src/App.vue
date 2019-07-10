@@ -4,17 +4,20 @@
       :player="score['PLAYER']"
       :bot="score['BOT']"
     ></score>
-    <welcome-page v-if="currentStateValue === 'welcome'" @start-game="startGame"></welcome-page>
-    <div v-if="currentStateValue === 'question'">
-      <type-question v-if="questionType === 'typing'"></type-question>
+    <welcome-page v-show="currentStateValue === 'welcome'" @start-game="startGame"></welcome-page>
+    <div v-show="currentStateValue === 'question'">
+      <typerighter
+        v-show="questionType === 'typing'"
+        @answered="onAnswered"
+      />
       <options-question
-        v-if="questionType === 'options'"
+        v-show="questionType === 'options'"
         :holder="currentHolder"
-        @shot="handleShot"
+        @shot="onShot"
       />
     </div>
-    <score-page v-if="currentStateValue === 'score'"></score-page>
-    <results-page v-if="currentStateValue === 'results'"></results-page>
+    <score-page v-show="currentStateValue === 'score'"></score-page>
+    <results-page v-show="currentStateValue === 'results'" @new-game="resetGame"></results-page>
   </div>
 </template>
 
@@ -25,8 +28,18 @@
   import PicturePage from './components/PicturePage.vue';
   import ScorePage from './components/ScorePage.vue';
   import ResultsPage from './components/ResultsPage.vue';
-  import TypeQuestion from './components/TypeQuestion.vue';
+  import Typerighter from './components/typerighter/Typerighter.vue';
   import OptionsQuestion from './components/options-question/OptionsQuestion.vue';
+
+  /**
+   * pictures:
+   * - int
+   * - opponent takes a shot
+   * - goal!
+   * - shot
+   * - saved/miss
+   * - victory/defeat
+   */
 
   const fsm = Machine({
     id: 'pages',
@@ -39,16 +52,19 @@
         on: { QUESTION: 'question'}
       },
       question: {
-        on: { SHOT: 'shot'}
+        on: { SHOT: 'shot', RESULTS: 'results' }
       },
       shot: {
-        on: { SCORE: 'score'}
+        on: {
+          SCORE: 'score',
+          RESULTS: 'results',
+        }
       },
       score: {
-        on: { START: 'question'}
+        on: { RESULTS: 'results' },
       },
       results: {
-        on: { START: 'question'}
+        on: { QUESTION: 'question'}
       },
     },
   });
@@ -59,7 +75,7 @@
       BOT: [null, null, null, null, null],
     },
     currentStateValue: fsm.initialStateValue,
-    questionType: 'options',
+    questionType: 'typing',
     currentHolder: 'PLAYER',
     isNextQuestion: false,
     isGameFinished: false,
@@ -81,7 +97,7 @@
       PicturePage,
       ScorePage,
       ResultsPage,
-      TypeQuestion,
+      Typerighter,
       OptionsQuestion,
     },
 
@@ -101,27 +117,32 @@
         this.fsmService.send('GETREADY');
       },
 
+      resetGame() {
+        Object.assign(this.$data, initialState());
+        this.fsmService.send('QUESTION');
+      },
+
       nextIteration() {
         this.scoreIndex++;
 
         if (this.scoreIndex === 5) {
-          this.fsmService.send('GETREADY');
+          this.fsmService.send('RESULTS');
         }
       },
 
-      handleShot(data) {
+      onShot(data) {
         this.shotsCount++;
         this.$set(this.score[this.currentHolder], this.scoreIndex, !!data.isCorrect);
-        console.log(this.score[this.currentHolder]);
 
         if (this.shotsCount % 2 === 0) {
-          console.log('next');
           this.nextIteration();
         }
 
         this.switchHolder();
+      },
 
-        // this.nextIteration();
+      onAnswered() {
+
       },
 
       switchHolder() {
