@@ -37,16 +37,6 @@
   import Typerighter from './components/typerighter/Typerighter.vue';
   import OptionsQuestion from './components/options-question/OptionsQuestion.vue';
 
-  /**
-   * pictures:
-   * - int
-   * - opponent takes a shot
-   * - goal!
-   * - shot
-   * - saved/miss
-   * - victory/defeat
-   */
-
   const fsm = Machine({
     id: 'pages',
     initial: 'welcome',
@@ -196,16 +186,6 @@
             break;
           case 'defeat':
             this.fsmService.send('RESULTS');
-            break;
-          default:
-            break;
-        }
-      },
-
-      changePicture(pictureState) {
-        switch(pictureState) {
-          case 'getready':
-            this.fsmService.send('QUESTION');
             break;
           default:
             break;
