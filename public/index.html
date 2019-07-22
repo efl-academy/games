@@ -13,11 +13,15 @@
     </noscript>
     <div id="app"></div>
     <script>
-      const PLAYER_NAME = 'EFL Academy';
-      const BOT_NAME = 'Trinity';
-      const pictureFrameLifetime = 1000; // in milliseconds
+      const settings = {
+        PLAYER_NAME: "EFL Academy",
+        BOT_NAME: "Trinity",
+        pictureFrameLifetime: 1600, // in milliseconds
+        quizTimeLimit: 1, //in seconds
+        typerTimeLimit: 1, // in seconds
+        botDifficulty: 0.7, // range [0, 1]; 0 - easy, 1 - hard, 0.5 - medium
+      };
 
-      const quizTimeLimit = 60; // // Sets time limit, in seconds
       const quizData = [
         {
           question: "___ ___ early is the best way to start a journey.",
@@ -41,7 +45,6 @@
         },
       ];
 
-      const typerighterTimeLimit = 1; // // Sets time limit, in seconds
       const typerighterData = [
         {
           word: "ask out",

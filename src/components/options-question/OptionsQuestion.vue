@@ -1,12 +1,13 @@
 <template>
   <div class="options-question">
     <div class="sentence-container">
-      <div class="question">{{currentQuiz.question}}</div>
+      <div class="sentence">{{currentQuiz.question}}</div>
     </div>
     <div class="answers-container">
       <answer v-for="answer in answers"
         :key="answer"
         :answer="answer"
+        :disabled="answered"
         @check-answer="checkAnswer"
       />
     </div>
@@ -19,9 +20,7 @@
   import shuffle from '@/helpers/shuffle';
 
   const initialState = () => ({
-    quizData,
-    timeLimit: quizTimeLimit,
-    currentIndex: 0,
+    answered: false,
     answers: [],
   });
 
@@ -34,6 +33,8 @@
 
     props: {
       holder: String,
+      data: Array,
+      currentIndex: Number,
     },
 
     data: () => ({
@@ -46,7 +47,7 @@
 
     computed: {
       currentQuiz() {
-        return this.quizData[this.currentIndex];
+        return this.data[this.currentIndex];
       },
     },
 
@@ -56,7 +57,7 @@
       },
 
       generateAnswers() {
-        const answers = this.quizData.map(q => q.answer);
+        const answers = this.data.map(q => q.answer);
         const shuffledAnswers = shuffle(answers);
 
         return shuffledAnswers.slice(0, 4);
@@ -66,27 +67,25 @@
         this.answers = this.generateAnswers();
       },
 
-      checkAnswer(data) {
-        this.currentIndex++;
-        const isNoQuiz = !this.currentQuiz;
+      checkAnswer(answer) {
+        this.answered = true;
+        const correct = this.currentQuiz.answer === answer;
 
-        if (isNoQuiz) {
-          this.quizData = shuffle(this.quizData);
-          this.currentIndex = 0;
-        }
-
-        this.answers = this.generateAnswers();
-
-        const isCorrect = this.currentQuiz.answer === data;
-        const payload = {
-          isCorrect,
-        }
-        this.$emit('shot', payload);
+        setTimeout(() => {
+          this.$emit('answered', correct);
+        }, 500);
       },
     },
   }
 </script>
 
 <style lang="less" scoped>
-
+  .options-question {
+    .sentence-container {
+      margin: 60px 0 120px;
+      .sentence {
+        font-size: 1.3em;
+      }
+    }
+  }
 </style>

@@ -1,31 +1,66 @@
+@import url('https://fonts.googleapis.com/css?family=Cabin');
+
+:root {
+  --text-font-size: 1.1em;
+  --heading-font-size: 1.6em;
+  --sentence-container-hight: 140px;
+}
+
+body {
+  background-color: #fbfbfb;
+  margin: 0;
+  padding: 0;
+  font-family: 'Cabin', sans-serif;
+  font-size: var(--text-font-size);
+  line-height: normal !important;
+}
+
+p {
+  margin: 0 !important;
+}
+
+.heading {
+  font-size: 2em;
+  font-weight: 500;
+}
+
 button {
-  padding: 8px 16px;
-  border-radius: 10px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: 500;
   outline: none;
   border-style: none;
   transition: 0.3s;
-  box-shadow: 0 0 3px 0 rgb(126, 126, 126);
+  box-shadow: 0px 3px 7px 1px #e4e4e4;
   margin: 6px 8px;
   user-select: none;
+  font-size: 1.2em;
+  color: black;
+  line-height: normal;
+  background-color: white;
 }
 
 button:hover {
-  box-shadow: 0 0 5px 0 rgb(126, 126, 126);
+  box-shadow: 0px 3px 7px 1px #e4e4e4;
+  background-color: rgb(247, 247, 247);
 }
 
 button:active {
-  box-shadow: 0 0 7px 0 rgb(126, 126, 126);
+  box-shadow: 0px 3px 5px 1px #e4e4e4;
+  transform: translateY(1px);
 }
 
 button.primary {
-  background-color: rgb(92, 179, 250);
+  background-color: #39a2fd;
   color: white;
-  font-weight: 600;
-  padding: 8px 16px;
+}
+
+.primary:hover {
+  background-color: #3293e9;
 }
 
 .primary:active {
-  background-color: rgb(71, 160, 233);
+  background-color: #167fdb;
 }
 
 button.normal {
@@ -33,5 +68,13 @@ button.normal {
 }
 
 .normal:active {
-  background-color: rgb(248, 248, 248);
+  background-color: rgb(241, 241, 241);
+}
+
+button.answered {
+  background-color: rgb(224, 224, 224);
+}
+
+.answered:active {
+  background-color: rgb(185, 185, 185);
 }

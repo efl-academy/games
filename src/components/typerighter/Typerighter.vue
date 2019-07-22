@@ -1,10 +1,5 @@
 <template>
   <div class="typerighter">
-    <timer
-      :timeLimit="timeLimit"
-      @time-is-up="answer"
-    />
-
     <div class="card">
       <div class="card-word">
         <p class="word">{{input.toLowerCase()}}</p>
@@ -42,15 +37,18 @@
       Timer,
     },
 
+    props: {
+      data: Array,
+      currentIndex: Number,
+    },
+
     data: () => ({
-      dataset: typerighterData,
-      timeLimit: typerighterTimeLimit,
+      timeLimit: settings.typerighterTimeLimit,
       elapsedTime: null,
       avgTimePerWord: null,
       answeredWords: [],
       showWelcome: true,
       finishGame: false,
-      currentIndex: 0,
       progress: {
         value: 0,
         correct: true,
@@ -73,18 +71,14 @@
 
     computed: {
       currentWord() {
-        return this.dataset[this.currentIndex];
+        return this.data[this.currentIndex];
       }
     },
 
     methods: {
       init() {
-        this.currentIndex = 0;
-        this.dataset = shuffle(this.dataset).map((item) => ({
-          ...item,
-          answered: false,
-        }));
         this.answeredWords = [];
+        this.$refs.input.focus();
       },
 
       handleChange(e) {
@@ -96,6 +90,7 @@
         const isGuessed = this.checkResult();
 
         if (isGuessed) {
+          this.$refs.input.disabled = true;
           this.answer(true);
         }
       },
@@ -124,25 +119,6 @@
         }
       },
 
-      goNextWord() {
-        this.resetQuestion();
-        this.currentIndex++;
-        this.$nextTick(() => {
-          if (!this.showResults) {
-            this.$refs.input.focus();
-          }
-        });
-      },
-
-      skipQuestion() {
-        this.answeredWords.push({...this.currentWord, correct: false});
-        this.goNextWord();
-        if (this.dataset.length === this.currentIndex) {
-          this.$root.$emit('end-game');
-          this.showResults = true;
-        }
-      },
-
       resetQuestion() {
         this.progress.value = 0;
         this.progress.correct = true;
@@ -167,8 +143,10 @@
         });
       },
 
-      answer(isCorrect) {
-        this.$emit('answered', isCorrect);
+      answer(correct) {
+        setTimeout(() => {
+          this.$emit('answered', correct);
+        }, 500);
       },
     },
   }
@@ -204,6 +182,7 @@
     font-size: 1.1rem;
     color: white;
     font-weight: bold;
+
     &:active {
       background-color: #3d7399;
     }
@@ -226,25 +205,30 @@
         user-select: none;
         display: flex;
         flex-direction: column;
+
         .card-word {
           height: 1.6rem;
           text-align: left;
           margin-left: 20px;
           margin-bottom: 1rem;
+
           .word {
             font-size: 1.3rem;
             font-weight: bold;
           }
         }
+
         .card-definition {
           margin: 0 20px !important;
           line-height: 1.4rem !important;
           text-align: justify;
         }
       }
+
       .word-input {
         transform: translateY(-25px);
         z-index: 200;
+
         input {
           max-width: 397px;
           width: 96vw;
@@ -258,6 +242,7 @@
         }
       }
     }
+
     .game-window:last-child {
       margin-bottom: 20px;
     }

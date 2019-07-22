@@ -1,7 +1,7 @@
 <template>
   <button
-    class="answer normal"
-    :class="{success: status === 'success', error: status === 'error'}"
+    class="answer"
+    :class="{'answered': answered}"
     :disabled="disabled"
     @click="onClick"
   >
@@ -16,8 +16,14 @@
       status: String,
       disabled: Boolean,
     },
+
+    data: () => ({
+      answered: false,
+    }),
+
     methods: {
       onClick() {
+        this.answered = true;
         this.$emit('check-answer', this.answer);
       }
     },

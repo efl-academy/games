@@ -45,34 +45,42 @@
     props: [
       'player',
       'bot',
+      'renderPending'
     ],
+
     data: () => ({
-      playerName: PLAYER_NAME,
-      botName: BOT_NAME,
+      playerName: settings.PLAYER_NAME,
+      botName: settings.BOT_NAME,
     }),
+
+    mounted() {
+      if (this.renderPending) {
+        setTimeout(() => {
+          this.$emit('score-action-rendered');
+        }, 350);
+      }
+    },
   }
 </script>
 
 <style lang="less" scoped>
   .score {
-    width: 230px;
+    font-size: 1.3em;
 
     .row-container {
       display: flex;
       justify-content: space-between;
 
-      .name {
-
-      }
-
       .row {
+        margin-left: 10px;
         display: flex;
 
         .cell {
           border-radius: 50%;
-          width: 20px;
-          height: 20px;
+          width: 26px;
+          height: 26px;
           margin: 2px;
+          transition: background-color 1s ease;
 
           &.failure {
             background-color: #fb4b4b;

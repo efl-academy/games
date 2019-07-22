@@ -35,7 +35,7 @@ export default {
 
     start() {
       this.timerId = setInterval(() => {
-        if (this.remainedTime < 2) {
+        if (this.remainedTime < 1) {
           // this.$emit('get-session-time', this.remainedTime - 1);
           this.$emit('time-is-up', false);
           clearInterval(this.timerId);
@@ -50,7 +50,7 @@ export default {
 <style lang="less" scoped>
   .timer {
     .time {
-      font-size: 24px;
+      font-size: 30px;
     }
   }
 </style>

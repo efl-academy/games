@@ -1,9 +1,12 @@
 <template>
-  <div>
+  <div class="score-page">
     <score
+      class="score"
       :player="score['PLAYER']"
       :bot="score['BOT']"
-    ></score>
+      :renderPending="renderPending"
+      @score-action-rendered="actionRendered"
+    />
   </div>
 </template>
 
@@ -15,6 +18,7 @@
 
     props: {
       score: Object,
+      renderPending: Object,
     },
 
     components: {
@@ -24,11 +28,24 @@
     mounted() {
       setTimeout(() => {
         this.$emit('next', 'score');
-      }, pictureFrameLifetime);
+      }, settings.pictureFrameLifetime);
+    },
+
+    methods: {
+      actionRendered() {
+        this.$emit('score-action-rendered');
+      },
     },
   }
 </script>
 
 <style lang="less" scoped>
+  .score-page {
+    display: flex;
+    justify-content: center;
 
+    .score {
+      margin-top: 140px;
+    }
+  }
 </style>

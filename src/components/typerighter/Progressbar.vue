@@ -34,6 +34,7 @@
     margin-bottom: 100px;
     color: white;
     background-color: rgb(42, 43, 44);
+
     .progress-bar {
       width: 0%;
       height: 100%;
