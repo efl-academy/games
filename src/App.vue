@@ -138,7 +138,7 @@
   });
 
   const ASSETS_COUNT = 19;
-  const ASSETS_LOCATION_FOLDER = 'https://cdn.jsdelivr.net/gh/efl-academy/games@soccer-v8/dist/assets/';
+  const ASSETS_LOCATION_FOLDER = 'https://cdn.jsdelivr.net/gh/efl-academy/games@soccer-v9/dist/assets/';
 
   const initialState = () => ({
     score: {
