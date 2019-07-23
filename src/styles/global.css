@@ -50,16 +50,20 @@ button:active {
   transform: translateY(1px);
 }
 
+button:focus {
+  background-color: white;
+}
+
 button.primary {
   background-color: #39a2fd;
   color: white;
 }
 
-.primary:hover {
+button.primary:hover {
   background-color: #3293e9;
 }
 
-.primary:active {
+button.primary:active {
   background-color: #167fdb;
 }
 
@@ -67,7 +71,7 @@ button.normal {
   background-color: white;
 }
 
-.normal:active {
+button.normal:active {
   background-color: rgb(241, 241, 241);
 }
 
@@ -75,6 +79,6 @@ button.answered {
   background-color: rgb(224, 224, 224);
 }
 
-.answered:active {
+button.answered:active {
   background-color: rgb(185, 185, 185);
 }

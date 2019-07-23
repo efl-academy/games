@@ -415,7 +415,8 @@
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
-    min-height: 800px;
+    min-height: 900px;
+    box-sizing: content-box;
 
     @media screen and(max-width: 2000px) {
       min-height: 600px;
