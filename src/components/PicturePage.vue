@@ -42,10 +42,7 @@
 <style lang="less" scoped>
   .picture-page {
     transition: display 1s;
-  }
-
-  img {
-    width: 200px !important;
+    margin: 100px 0 100px;
   }
 
   // @media screen and (max-width: 320px) {
