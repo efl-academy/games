@@ -138,7 +138,7 @@
   });
 
   const ASSETS_COUNT = 19;
-  const ASSETS_LOCATION_FOLDER = 'https://cdn.jsdelivr.net/gh/efl-academy/games@soccer-v6/dist/assets/';
+  const ASSETS_LOCATION_FOLDER = 'https://cdn.jsdelivr.net/gh/efl-academy/games@soccer-v7/dist/assets/';
 
   const initialState = () => ({
     score: {
@@ -415,7 +415,15 @@
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
-    min-height: 380px;
+    min-height: 800px;
+
+    @media screen and(max-width: 2000px) {
+      min-height: 600px;
+    }
+
+    @media screen and(max-width: 1200px) {
+      min-height: 420px;
+    }
 
     .results-page-container {
       display: flex;
