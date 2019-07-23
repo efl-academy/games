@@ -65,7 +65,7 @@
 
 <style lang="less" scoped>
   .score {
-    font-size: 1.3em;
+    font-size: 1.2em;
 
     .row-container {
       display: flex;
