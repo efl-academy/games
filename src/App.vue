@@ -138,6 +138,7 @@
   });
 
   const ASSETS_COUNT = 19;
+  const ASSETS_LOCATION_FOLDER = 'https://github.com/efl-academy/games/tree/soccer/dist/assets/';
 
   const initialState = () => ({
     score: {
@@ -199,13 +200,16 @@
     },
 
     mounted() {
+      const assetsBaseLocation = process.env.NODE_ENV === 'development' ? './assets/' : ASSETS_LOCATION_FOLDER;
+
       Object.keys(fsm.states).map((state) => {
         this.assets[state] = [];
 
         // load up to 4 images for 1 state
         for (let i = 1; i < 5; i++) {
           const img = new Image();
-          img.src = `./assets/${state}/${state}${i}.jpg`;
+          const assetsLocation = `${assetsBaseLocation}${state}/${state}${i}.jpg`;
+          img.src = assetsLocation;
           img.onload = () => {
             this.assetsLoadedCount++
             this.assets[state].push(img);
@@ -411,6 +415,7 @@
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
+    min-height: 380px;
 
     .results-page-container {
       display: flex;
