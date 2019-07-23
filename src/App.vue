@@ -229,7 +229,7 @@
         switch(currentPage) {
           case 'score':
             this.switchHolder();
-            // this.switchQuestionType();
+            this.switchQuestionType();
 
             if (this.isGameFinished) {
               const winner = this.calculateWinner();
